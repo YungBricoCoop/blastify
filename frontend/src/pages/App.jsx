@@ -16,6 +16,10 @@ import { login,getTopArtists } from "../api/spotify";
 function App() {
   // states
   const [token, setToken] = useState("")
+  const [spotifyData, setSpotifyData] = useState({
+    topArtists: [],
+    topTracks: [],
+  })
   
   // handlers
   const onLoginClick = () => {
@@ -39,13 +43,23 @@ function App() {
     }
 
     setToken(token);
-    getTopArtists(token);
+    getTopArtists(token).then((data) => {
+      setSpotifyData({
+        ...spotifyData,
+        topArtists: data.items.map((item) => {
+          return {
+            name: item.name,
+            image: item.images[0].url,
+          };
+        }),
+      });
+    });
   }, []);
 
   return (
     <div className="App">
       <Toolbar onLoginClick={onLoginClick} />
-      <Dock />
+      <Dock data={spotifyData.topArtists} />
       <ArrowsCarousel />
     </div>
   );

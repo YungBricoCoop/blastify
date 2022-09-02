@@ -5,12 +5,16 @@ import {
   BsArrowRightCircle,
   BsSearch,
   BsVolumeDown,
+  BsApple,
 } from "react-icons/bs";
 
-const Toolbar = () => {
+const Toolbar = ({onLoginClick}) => {
   return (
     <div class="toolbar grid grid-cols-2 bg-white/[0.05] backdrop-blur-sm pl-10 pr-10 pt-1 pb-1">
-      <div className="flex align-middle">
+      <div className="flex align-middle items-center">
+        <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
+          <BsApple onClick={onLoginClick}/>
+        </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
           <h4>Home</h4>
         </div>

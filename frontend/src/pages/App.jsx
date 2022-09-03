@@ -12,7 +12,12 @@ import ItemsGrid from "../components/ItemsGrid";
 import Search from "../components/Search";
 
 // functions
-import { login, getTopArtists, getTopTracks } from "../wrk/spotify";
+import {
+  login,
+  getTopArtists,
+  getTopTracks,
+  searchTracksAndAlbums,
+} from "../wrk/spotify";
 import { getToken } from "../utils/storage";
 
 function App() {
@@ -40,10 +45,11 @@ function App() {
 
   const handleNext = () => {
     setOffset(offset + 1);
-  }
+  };
+
   const handlePrevious = () => {
-    if(offset > 0) setOffset(offset - 1);
-  }
+    if (offset > 0) setOffset(offset - 1);
+  };
 
   // use effects
   useEffect(() => {
@@ -52,14 +58,18 @@ function App() {
 
   return (
     <div className="App">
-      <Toolbar onLoginClick={onLoginClick} onSearchClick={() => setDisplaySearch(true)} />
-      <ItemsGrid data={spotifyData.topTracks} offset={offset}  />
-      <Dock
-        data={spotifyData.topArtists}
-        onDockItemClick={() => {}}
+      <Toolbar
+        onLoginClick={onLoginClick}
+        onSearchClick={() => setDisplaySearch(true)}
       />
-      <ArrowsCarousel onNext={handleNext} onPrevious={handlePrevious}/>
-      <Search display={displaySearch} onChange={setSearch} onEnter={() => setDisplaySearch(false)}/>
+      <ItemsGrid data={spotifyData.topTracks} offset={offset} />
+      <Dock data={spotifyData.topArtists} onDockItemClick={() => {}} />
+      <ArrowsCarousel onNext={handleNext} onPrevious={handlePrevious} />
+      <Search
+        display={displaySearch}
+        onChange={setSearch}
+        onEnter={() => {}}
+      />
     </div>
   );
 }

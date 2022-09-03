@@ -100,16 +100,42 @@ const getTopTracks = async () => {
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
   result = result.items.map((item) => {
-      return {
-          name: item.name,
-          artist: item.artists.map((artist) => artist.name).join(" - "),
-          id: item.id,
-          image: item.album.images[0].url,
-          type : item.type,
-          album_type : item.album.album_type,
-      }
-  })
+    return {
+      name: item.name,
+      artist: item.artists.map((artist) => artist.name).join(" - "),
+      id: item.id,
+      image: item.album.images[0].url,
+      type: item.type,
+      album_type: item.album.album_type,
+    };
+  });
   return result;
 };
 
-export { login, getTopArtists, getTopTracks };
+const searchTracksAndAlbums = async (query) => {
+  const params = {
+    q: encodeURI(query),
+    type: "track,album",
+    limit: 10,
+  };
+
+  let result = await get("https://api.spotify.com/v1/search", params, headers);
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+
+  result = result.tracks.items.map((item) => {
+    return {
+      name: item.name,
+      artist: item.artists.map((artist) => artist.name).join(" - "),
+      id: item.id,
+      image: item.album.images[0].url,
+      type: item.type,
+      album_type: item.album.album_type,
+    };
+  });
+
+  return result;
+};
+
+export { login, getTopArtists, getTopTracks, searchTracksAndAlbums };

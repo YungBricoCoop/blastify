@@ -8,7 +8,6 @@ import "../css/App.css";
 import Toolbar from "../components/Toolbar";
 import Dock from "../components/Dock";
 import ArrowsCarousel from "../components/ArrowsCarousel";
-import constants from "../constants/constants";
 
 // functions
 import { login, getTopArtists } from "../wrk/spotify";
@@ -28,6 +27,7 @@ function App() {
     const loginCompleted = await login();
     if (!loginCompleted) return;
     const topArtists = await getTopArtists();
+    if (topArtists) setSpotifyData({ ...spotifyData, topArtists });
   };
 
   // use effects
@@ -38,7 +38,7 @@ function App() {
   return (
     <div className="App">
       <Toolbar onLoginClick={onLoginClick} />
-      <Dock data={spotifyData.topArtists} />
+      <Dock data={spotifyData.topArtists} onDockItemClick={() => console.log("asd")} />
       <ArrowsCarousel />
     </div>
   );

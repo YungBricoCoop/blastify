@@ -50,17 +50,38 @@ const _testTokenExp = () => {
   return true;
 };
 
-const getTopArtists = async (access_token) => {
-  const url = `?time_range=medium_term&limit=10`;
+const _checkTokenValidity = (response) => {
+  if (response?.error?.status == 401) {
+    removeToken();
+    removeTokenExp();
+    return login();
+  }
+  return true;
+};
+
+const getTopArtists = async () => {
   const params = {
     time_range: "medium_term",
     limit: 10,
   };
-  const result = await get(
+  
+  let result = await get(
     "https://api.spotify.com/v1/me/top/artists",
     params,
     headers
   );
+  
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  
+  result = result.items.map((item) => {
+    return {
+      name: item.name,
+      id: item.id,
+      image: item.images[0].url,
+    };
+  });
+
   return result;
 };
 

@@ -4,7 +4,7 @@ import {
   BsArrowLeftCircle,
   BsArrowRightCircle,
   BsSearch,
-  BsVolumeDown,
+  BsFillVolumeUpFill,
   BsApple,
 } from "react-icons/bs";
 
@@ -36,7 +36,7 @@ const Toolbar = ({onLoginClick}) => {
           <BsSearch />
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
-          <BsVolumeDown />
+          <BsFillVolumeUpFill />
         </div>
       </div>
     </div>

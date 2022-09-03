@@ -1,6 +1,5 @@
 const getUrlParam = (param) => {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
+  return new URLSearchParams(window.location.hash).get(param);
 };
 
 export { getUrlParam };

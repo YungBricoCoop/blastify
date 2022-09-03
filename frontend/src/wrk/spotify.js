@@ -64,16 +64,16 @@ const getTopArtists = async () => {
     time_range: "medium_term",
     limit: 10,
   };
-  
+
   let result = await get(
     "https://api.spotify.com/v1/me/top/artists",
     params,
     headers
   );
-  
+
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  
+
   result = result.items.map((item) => {
     return {
       name: item.name,
@@ -85,4 +85,31 @@ const getTopArtists = async () => {
   return result;
 };
 
-export { login, getTopArtists };
+const getTopTracks = async () => {
+  const params = {
+    time_range: "medium_term",
+    limit: 50,
+  };
+
+  let result = await get(
+    "https://api.spotify.com/v1/me/top/tracks",
+    params,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  result = result.items.map((item) => {
+      return {
+          name: item.name,
+          artist: item.artists.map((artist) => artist.name).join(" - "),
+          id: item.id,
+          image: item.album.images[0].url,
+          type : item.type,
+          album_type : item.album.album_type,
+      }
+  })
+  return result;
+};
+
+export { login, getTopArtists, getTopTracks };

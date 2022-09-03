@@ -8,7 +8,7 @@ import {
   BsApple,
 } from "react-icons/bs";
 
-const Toolbar = ({onLoginClick}) => {
+const Toolbar = ({onLoginClick, onSearchClick}) => {
   return (
     <div className="toolbar grid grid-cols-2 bg-white/[0.05] backdrop-blur-sm pl-10 pr-10 pt-1 pb-1">
       <div className="flex align-middle items-center">
@@ -19,7 +19,7 @@ const Toolbar = ({onLoginClick}) => {
           <h4>Home</h4>
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
-          <h4>library</h4>
+          <h4>Library</h4>
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
           <h4>Settings</h4>
@@ -33,7 +33,7 @@ const Toolbar = ({onLoginClick}) => {
           <BsArrowRightCircle />
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
-          <BsSearch />
+          <BsSearch onClick={onSearchClick}/>
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
           <BsFillVolumeUpFill />

@@ -1,4 +1,4 @@
-import { get, redirect } from "../utils/request";
+import { get, post, redirect } from "../utils/request";
 import {
   saveToken,
   getToken,
@@ -8,6 +8,7 @@ import {
   removeTokenExp,
 } from "../utils/storage";
 import { getUrlParam } from "../utils/url";
+import { millisToTime } from "../utils/time";
 import constants from "../constants/constants";
 
 const headers = {
@@ -73,12 +74,12 @@ const getTopArtists = async () => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-
   result = result.items.map((item) => {
     return {
       name: item.name,
       id: item.id,
       image: item.images[0].url,
+      type: item.type,
     };
   });
 
@@ -106,7 +107,6 @@ const getTopTracks = async () => {
       id: item.id,
       image: item.album.images[0].url,
       type: item.type,
-      album_type: item.album.album_type,
     };
   });
   return result;
@@ -115,7 +115,7 @@ const getTopTracks = async () => {
 const searchTracksAndAlbums = async (query) => {
   const params = {
     q: encodeURI(query),
-    type: "track,album",
+    type: "track,album,artist",
     limit: 10,
   };
 
@@ -123,7 +123,7 @@ const searchTracksAndAlbums = async (query) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-
+  console.log(result);
   result = result.tracks.items.map((item) => {
     return {
       name: item.name,
@@ -131,11 +131,104 @@ const searchTracksAndAlbums = async (query) => {
       id: item.id,
       image: item.album.images[0].url,
       type: item.type,
-      album_type: item.album.album_type,
     };
   });
 
   return result;
 };
 
-export { login, getTopArtists, getTopTracks, searchTracksAndAlbums };
+const skipToNext = async () => {
+  const result = await post(
+    "https://api.spotify.com/v1/me/player/next",
+    null,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  return result;
+};
+
+const skipToPrevious = async () => {
+  const result = await post(
+    "https://api.spotify.com/v1/me/player/previous",
+    null,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  return result;
+};
+
+const getArtist = async (id) => {
+  let result = await get(
+    "https://api.spotify.com/v1/artists/" + id,
+    null,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  return result;
+};
+
+const getArtistAlbums = async (id) => {
+  let result = await get(
+    "https://api.spotify.com/v1/artists/" + id + "/albums",
+    null,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  result = result.items.map((item) => {
+    return {
+      name: item.name,
+      id: item.id,
+      artist: item.artists.map((artist) => artist.name).join(" - "),
+      image: item.images[0].url,
+      type: item.type,
+    };
+  });
+  return result;
+};
+
+const getArtidtTopTracks = async (id) => {
+  const params = {
+    market: "CH",
+  };
+
+  let result = await get(
+    "https://api.spotify.com/v1/artists/" + id + "/top-tracks",
+    params,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  result = result.tracks.map((item) => {
+    return {
+      name: item.name,
+      artist: item.artists.map((artist) => artist.name).join(" - "),
+      id: item.id,
+      image: item.album.images[0].url,
+      duration : millisToTime(item.duration_ms) ,
+      type: item.type,
+    };
+  });
+  console.log(result)
+  return result;
+};
+
+export {
+  login,
+  getTopArtists,
+  getTopTracks,
+  searchTracksAndAlbums,
+  skipToNext,
+  skipToPrevious,
+  getArtist,
+  getArtistAlbums,
+  getArtidtTopTracks,
+};

@@ -18,25 +18,17 @@ const ListItems = ({
           className="cursor-pointer opacity-50 hover:opacity-100 hover:scale-110 transition ease-in-out duration-300"
           onClick={onClose}
         />
-        <BsCircle
-          size={"18px"}
-          className="opacity-50"
-        />
-        <BsCircle
-          size={"18px"}
-          className="opacity-50"
-        />
+        <BsCircle size={"18px"} className="opacity-50" />
+        <BsCircle size={"18px"} className="opacity-50" />
       </div>
-      <div className="flex items-center justify-between	">
-        <div>
+      <div className="flex items-center gap-x-24 justify-evenly">
+        <div className="flex-initial">
           <h1 className="text-center font-medium">{data?.album}</h1>
-          <div className=" bg-white/10 rounded-2xl">
-            <img src={data.image} className="w-60 rounded-xl aspect-square" />
-          </div>
+          <img src={data.image} className="w-60 rounded-xl aspect-square" />
           <h1 className="text-center font-medium">{data?.name}</h1>
         </div>
         {type === "list" && (
-          <div className="overflow-x-auto overflow-y-scroll relative sm:rounded-lg w-1/2">
+          <div className="flex-initial overflow-x-auto overflow-y-scroll relative sm:rounded-lg w-2/4 h-80">
             <table className="table-auto">
               <thead className="border-b-2 border-white/10">
                 <tr className="">

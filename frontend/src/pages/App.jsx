@@ -1,5 +1,5 @@
 // react
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // css
 import "../css/App.css";
@@ -36,12 +36,12 @@ function App() {
     artistAlbums: [],
     artistTopTracks: [],
   });
-  const [stateHistory, setStateHistory] = useState([]);
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState(false);
   const [displaySearch, setDisplaySearch] = useState(false);
   // search, top-tracks, playlists, album, artist, artist-albums
   const [displayType, setDisplayType] = useState("top-tracks");
+  const [displayTypeHistory, setDisplayTypeHistory] = useState([]);
 
   // handlers
   const onLoginClick = () => {
@@ -78,12 +78,22 @@ function App() {
   };
 
   const handleItemClick = async (item) => {
+    addDisplayTypeToHistory();
     if (item?.type === "artist") {
       handleDisplayArtist(item);
     }
   };
 
-  const addStateToHistory = () => {};
+  const handleDisplayLastType = () => {
+    const lastType = displayTypeHistory[displayTypeHistory.length - 1];
+    if (lastType) {
+      setDisplayType(lastType);
+    }
+  };
+
+  const addDisplayTypeToHistory = () => {
+    setDisplayTypeHistory([...displayTypeHistory, displayType]);
+  };
   // use effects
   useEffect(() => {
     handleLogin();
@@ -91,7 +101,6 @@ function App() {
 
   return (
     <div className="App">
-
       <Toolbar
         onLoginClick={onLoginClick}
         onSearchClick={() => setDisplaySearch(true)}
@@ -111,12 +120,21 @@ function App() {
           grid={spotifyData.artistAlbums}
           data={spotifyData.artist}
           onListItemClick={handleItemClick}
+          onCloseClick={handleDisplayLastType}
         />
       )}
 
       <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} />
       <ArrowsCarousel onNext={handleNext} onPrevious={handlePrevious} />
-      <Search display={displaySearch} onChange={setSearch} onEnter={() => {}} onClose={() => setDisplaySearch(false)} />
+      <Search
+        display={displaySearch}
+        onChange={setSearch}
+        onEnter={() => {}}
+        onClose={() => {
+          setDisplaySearch(false);
+          handleDisplayLastType();
+        }}
+      />
     </div>
   );
 }

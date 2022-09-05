@@ -36,7 +36,7 @@ const ListItems = ({
           <h1 className="text-center font-medium">{data?.name}</h1>
         </div>
         {type === "list" && (
-          <div className="overflow-x-auto overflow-y-scroll relative sm:rounded-lg">
+          <div className="overflow-x-auto overflow-y-scroll relative sm:rounded-lg w-1/2">
             <table className="table-auto">
               <thead className="border-b-2 border-white/10">
                 <tr className="">

@@ -23,6 +23,9 @@ import {
   getArtist,
   getArtistAlbums,
   getArtidtTopTracks,
+  getPlaylists,
+  getPlaylist,
+  playTrack,
 } from "../wrk/spotify";
 import { getToken } from "../utils/storage";
 
@@ -41,7 +44,7 @@ function App() {
   const [displaySearch, setDisplaySearch] = useState(false);
   // search, top-tracks, playlists, album, artist, artist-albums
   const [displayType, setDisplayType] = useState("top-tracks");
-  const [displayTypeHistory, setDisplayTypeHistory] = useState([]);
+  const [displayHistory, setDisplayHistory] = useState([]);
 
   // handlers
   const onLoginClick = () => {
@@ -53,8 +56,9 @@ function App() {
     if (!loginCompleted) return;
     const topArtists = await getTopArtists();
     const topTracks = await getTopTracks();
-    if (topArtists && topTracks)
-      setSpotifyData({ ...spotifyData, topArtists, topTracks });
+    const playlists = await getPlaylists();
+    if (topArtists && topTracks && playlists)
+      setSpotifyData({ ...spotifyData, topArtists, topTracks, playlists });
   };
 
   const handleNext = () => {
@@ -77,22 +81,40 @@ function App() {
     });
   };
 
+  const handleDisplayPlaylist = async (playlist) => {
+    setDisplayType("playlist");
+    const playlistTracks = await getPlaylist(playlist.id);
+    setSpotifyData({
+      ...spotifyData,
+      playlistTracks,
+    });
+  }
+
   const handleItemClick = async (item) => {
-    addDisplayTypeToHistory();
+    addDisplayToHistory();
     if (item?.type === "artist") {
       handleDisplayArtist(item);
     }
-  };
-
-  const handleDisplayLastType = () => {
-    const lastType = displayTypeHistory[displayTypeHistory.length - 1];
-    if (lastType) {
-      setDisplayType(lastType);
+    if (item?.type === "track") {
+      playTrack(item.id);
+    }
+    if ( item?.type === "playlist" ) {
+      handleDisplayPlaylist(item);
     }
   };
 
-  const addDisplayTypeToHistory = () => {
-    setDisplayTypeHistory([...displayTypeHistory, displayType]);
+  const handleShowLastDisplay = () => {
+    const display = displayHistory.reverse().find((display) => {
+      return display.displayType !== displayType;
+    });
+    if (display) {
+      setDisplayType(display.displayType);
+      setOffset(display.offset);
+    }
+  };
+
+  const addDisplayToHistory = () => {
+    setDisplayHistory([...displayHistory, { displayType, offset }]);
   };
   // use effects
   useEffect(() => {
@@ -104,6 +126,9 @@ function App() {
       <Toolbar
         onLoginClick={onLoginClick}
         onSearchClick={() => setDisplaySearch(true)}
+        onHomeClick={() => setDisplayType("top-tracks")}
+        onLibraryClick={() => setDisplayType("playlists")}
+        onSettingsClick={() => setDisplayType("settings")}
         onPreviousTrack={skipToPrevious}
         onNextTrack={skipToNext}
       />
@@ -111,7 +136,14 @@ function App() {
         <ItemsGrid
           data={spotifyData.topTracks}
           offset={offset}
-          onItemGridClick={console.log}
+          onItemGridClick={handleItemClick}
+        />
+      )}
+      {displayType === "playlists" && (
+        <ItemsGrid
+          data={spotifyData.playlists}
+          offset={offset}
+          onItemGridClick={handleItemClick}
         />
       )}
       {displayType === "artist" && (
@@ -120,7 +152,7 @@ function App() {
           grid={spotifyData.artistAlbums}
           data={spotifyData.artist}
           onListItemClick={handleItemClick}
-          onCloseClick={handleDisplayLastType}
+          onClose={handleShowLastDisplay}
         />
       )}
 
@@ -132,7 +164,6 @@ function App() {
         onEnter={() => {}}
         onClose={() => {
           setDisplaySearch(false);
-          handleDisplayLastType();
         }}
       />
     </div>

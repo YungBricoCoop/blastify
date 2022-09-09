@@ -4,7 +4,7 @@ import { BsCircle, BsXCircle } from "react-icons/bs";
 const Search = ({ display, value, onChange, onEnter, onClose }) => {
   return (
     <div
-      className={`search-modal absolute w-full h-full left-0 top-0  p-2 rounded-xl bg-black/20 backdrop-blur-md ${
+      className={`search-modal absolute w-full h-full left-0 top-0  p-2 rounded-xl bg-black/5 backdrop-blur-md ${
         display ? "" : "hidden"
       } z-10`}
     >
@@ -19,8 +19,9 @@ const Search = ({ display, value, onChange, onEnter, onClose }) => {
           <BsCircle size={"18px"} className="opacity-50" />
         </div>
 
-        <div className="shadow relative p-2 rounded-xl bg-white/20  border-2 border-white/20">
+        <div className="shadow relative p-2 rounded-xl bg-white/5  border-2 border-white/50">
           <input
+            autoFocus
             type={"text"}
             value={value}
             placeholder={"Search"}

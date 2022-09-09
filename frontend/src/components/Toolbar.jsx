@@ -8,7 +8,7 @@ import {
   BsApple,
 } from "react-icons/bs";
 
-const Toolbar = ({onLoginClick, onSearchClick, onPreviousTrack, onNextTrack}) => {
+const Toolbar = ({onLoginClick, onSearchClick, onPreviousTrack, onNextTrack, onHomeClick, onLibraryClick, onSettingsClick}) => {
   return (
     <div className="toolbar grid grid-cols-2 bg-white/[0.05] backdrop-blur-sm pl-10 pr-10 pt-1 pb-1">
       <div className="flex align-middle items-center">
@@ -16,13 +16,13 @@ const Toolbar = ({onLoginClick, onSearchClick, onPreviousTrack, onNextTrack}) =>
           <BsApple onClick={onLoginClick}/>
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
-          <h4>Home</h4>
+          <h4 onClick={onHomeClick}>Home</h4>
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
-          <h4>Library</h4>
+          <h4 onClick={onLibraryClick}>Library</h4>
         </div>
         <div className="mr-10 text-white hover:text-white/60 hover:cursor-pointer">
-          <h4>Settings</h4>
+          <h4 onClick={onSettingsClick}>Settings</h4>
         </div>
       </div>
       <div className="flex justify-end	items-center">

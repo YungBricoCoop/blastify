@@ -1,4 +1,4 @@
-import { get, post, redirect } from "../utils/request";
+import { get, post, put, redirect } from "../utils/request";
 import {
   saveToken,
   getToken,
@@ -14,6 +14,8 @@ import constants from "../constants/constants";
 const headers = {
   Authorization: `Bearer ${getToken()}`,
 };
+
+const imageQuality = 1;
 
 const login = async () => {
   const token = getUrlParam("#access_token");
@@ -78,7 +80,7 @@ const getTopArtists = async () => {
     return {
       name: item.name,
       id: item.id,
-      image: item.images[0].url,
+      image: item.images[imageQuality].url,
       type: item.type,
     };
   });
@@ -105,7 +107,7 @@ const getTopTracks = async () => {
       name: item.name,
       artist: item.artists.map((artist) => artist.name).join(" - "),
       id: item.id,
-      image: item.album.images[0].url,
+      image: item.album.images[imageQuality].url,
       type: item.type,
     };
   });
@@ -129,7 +131,7 @@ const searchTracksAndAlbums = async (query) => {
       name: item.name,
       artist: item.artists.map((artist) => artist.name).join(" - "),
       id: item.id,
-      image: item.album.images[0].url,
+      image: item.album.images[imageQuality].url,
       type: item.type,
     };
   });
@@ -187,7 +189,7 @@ const getArtistAlbums = async (id) => {
       name: item.name,
       id: item.id,
       artist: item.artists.map((artist) => artist.name).join(" - "),
-      image: item.images[0].url,
+      image: item.images[imageQuality].url,
       type: item.type,
     };
   });
@@ -212,12 +214,77 @@ const getArtidtTopTracks = async (id) => {
       name: item.name,
       artist: item.artists.map((artist) => artist.name).join(" - "),
       id: item.id,
-      image: item.album.images[0].url,
-      duration : millisToTime(item.duration_ms) ,
+      image: item.album.images[imageQuality].url,
+      duration: millisToTime(item.duration_ms),
       type: item.type,
     };
   });
-  console.log(result)
+  console.log(result);
+  return result;
+};
+
+const getPlaylists = async () => {
+  const params = {
+    limit: 50,
+  };
+  let result = await get(
+    "https://api.spotify.com/v1/me/playlists",
+    params,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  result = result.items.map((item) => {
+    return {
+      name: item.name,
+      id: item.id,
+      image: item.images[imageQuality]
+        ? item.images[imageQuality].url
+        : item.images[0].url,
+      type: item.type,
+    };
+  });
+  return result;
+};
+
+const getPlaylist = async (id) => {
+
+  let result = await get(
+    "https://api.spotify.com/v1/playlists/" + id,
+    null,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  console.log(result);
+  result = result.tracks.items.map((item) => {
+    if (!item.track.name) return;
+    return {
+      name: item.track.name,
+      artist: item.track.artists.map((artist) => artist.name).join(" - "),
+      id: item.track.id,
+      image: item.track.album.images[imageQuality] ? item.track.album.images[imageQuality].url : item.track.album.images[0].url,
+      type: item.track.type,
+    };
+  });
+  return result;
+};
+
+const playTrack = async (id) => {
+  const params = {
+    uris: ["spotify:track:" + id],
+  };
+
+  const result = await put(
+    "https://api.spotify.com/v1/me/player/play",
+    params,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
   return result;
 };
 
@@ -231,4 +298,7 @@ export {
   getArtist,
   getArtistAlbums,
   getArtidtTopTracks,
+  getPlaylists,
+  getPlaylist,
+  playTrack,
 };

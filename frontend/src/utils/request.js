@@ -1,19 +1,40 @@
 const get = async (url, params, headers) => {
-  const response = await fetch(_buildUrl(url, params), {
-    headers: headers,
-  });
-  const data = await response.json();
-  return data;
+  const response = await fetch(
+    _buildUrl(url, params),
+    _buildBodyAndHeaders("GET", params, headers)
+  );
+  try {
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    return {};
+  }
 };
 
 const post = async (url, params, headers) => {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(params),
-  });
-  const data = await response.json();
-  return data;
+  const response = await fetch(
+    url,
+    _buildBodyAndHeaders("POST", params, headers)
+  );
+  try {
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    return {};
+  }
+};
+
+const put = async (url, params, headers) => {
+  const response = await fetch(
+    url,
+    _buildBodyAndHeaders("PUT", params, headers)
+  );
+  try {
+    const data = await response.json();
+    return data;
+  } catch (e) {
+    return {};
+  }
 };
 
 const redirect = (url, params) => {
@@ -26,4 +47,9 @@ const _buildUrl = (url, params) => {
   return `${url}?${urlParams.toString()}`;
 };
 
-export { get, post, redirect };
+const _buildBodyAndHeaders = (type = "GET", params = {}, headers = {}) => {
+  if (type === "GET") return { headers: headers };
+  else return { method: type, body: JSON.stringify(params), headers: headers };
+};
+
+export { get, post, put, redirect };

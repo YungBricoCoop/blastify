@@ -33,7 +33,7 @@ const ListItems = ({
               <thead className="border-b-2 border-white/10">
                 <tr className="">
                   <th className="p-1">Title</th>
-                  <th className="p-1">Duration</th>
+                  <th className="p-1 pr-4">Duration</th>
                 </tr>
               </thead>
               <tbody>

@@ -42,6 +42,7 @@ function App() {
   const [offset, setOffset] = useState(0);
   const [search, setSearch] = useState(false);
   const [displaySearch, setDisplaySearch] = useState(false);
+  const [displaySettings, setDisplaySettings] = useState(false);
   // search, top-tracks, playlists, album, artist, artist-albums
   const [displayType, setDisplayType] = useState("top-tracks");
   const [displayHistory, setDisplayHistory] = useState([]);
@@ -70,9 +71,9 @@ function App() {
   };
 
   const handleDisplayArtist = async (artist) => {
-    setDisplayType("artist");
     const artistAlbums = await getArtistAlbums(artist.id);
     const artistTopTracks = await getArtidtTopTracks(artist.id);
+    setDisplayType("artist");
     setSpotifyData({
       ...spotifyData,
       artist,
@@ -82,23 +83,30 @@ function App() {
   };
 
   const handleDisplayPlaylist = async (playlist) => {
-    setDisplayType("playlist");
     const playlistTracks = await getPlaylist(playlist.id);
+    setDisplayType("playlist");
     setSpotifyData({
       ...spotifyData,
       playlistTracks,
+      playlist,
     });
-  }
+  };
 
   const handleItemClick = async (item) => {
     addDisplayToHistory();
+    if (item === "playlists" || item === "top-tracks" || item === "artist") {
+      setDisplayType(item);
+      setOffset(0);
+      return;
+    }
+
     if (item?.type === "artist") {
       handleDisplayArtist(item);
     }
     if (item?.type === "track") {
       playTrack(item.id);
     }
-    if ( item?.type === "playlist" ) {
+    if (item?.type === "playlist") {
       handleDisplayPlaylist(item);
     }
   };
@@ -125,12 +133,12 @@ function App() {
     <div className="App">
       <Toolbar
         onLoginClick={onLoginClick}
-        onSearchClick={() => setDisplaySearch(true)}
-        onHomeClick={() => setDisplayType("top-tracks")}
-        onLibraryClick={() => setDisplayType("playlists")}
-        onSettingsClick={() => setDisplayType("settings")}
+        onHomeClick={() => handleItemClick("top-tracks")}
+        onLibraryClick={() => handleItemClick("playlists")}
         onPreviousTrack={skipToPrevious}
         onNextTrack={skipToNext}
+        onSearchClick={() => setDisplaySearch(true)}
+        onSettingsClick={() => setDisplaySettings(true)}
       />
       {displayType === "top-tracks" && (
         <ItemsGrid
@@ -151,6 +159,14 @@ function App() {
           list={spotifyData.artistTopTracks}
           grid={spotifyData.artistAlbums}
           data={spotifyData.artist}
+          onListItemClick={handleItemClick}
+          onClose={handleShowLastDisplay}
+        />
+      )}
+      {displayType === "playlist" && (
+        <ListItems
+          list={spotifyData.playlistTracks}
+          data={spotifyData.playlist}
           onListItemClick={handleItemClick}
           onClose={handleShowLastDisplay}
         />

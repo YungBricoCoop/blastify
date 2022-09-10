@@ -258,17 +258,18 @@ const getPlaylist = async (id) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  console.log(result);
   result = result.tracks.items.map((item) => {
-    if (!item.track.name) return;
+    const track = item.track;
+    if (!track?.name) return null;
     return {
-      name: item.track.name,
-      artist: item.track.artists.map((artist) => artist.name).join(" - "),
-      id: item.track.id,
-      image: item.track.album.images[imageQuality] ? item.track.album.images[imageQuality].url : item.track.album.images[0].url,
-      type: item.track.type,
+      name: track.name,
+      artist: track.artists.map((artist) => artist.name).join(" - "),
+      id: track.id,
+      image: track.album.images[imageQuality] ? track.album.images[imageQuality].url : track.album.images[0].url,
+      duration: millisToTime(track.duration_ms),
+      type: track.type,
     };
-  });
+  }).filter(item => item !== null);
   return result;
 };
 

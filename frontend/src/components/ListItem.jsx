@@ -12,7 +12,7 @@ const ListItem = ({
       onClick={() => onListItemClick({ id, name, duration, type })}
     >
       <td className="p-1">{name}</td>
-      <td className="p-1">{duration}</td>
+      <td className="pr-4 text-right">{duration}</td>
     </tr>
   );
 };

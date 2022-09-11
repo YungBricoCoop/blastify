@@ -7,7 +7,6 @@ import "../css/App.css";
 // components
 import Toolbar from "../components/Toolbar";
 import Dock from "../components/Dock";
-import ArrowsCarousel from "../components/ArrowsCarousel";
 import ItemsGrid from "../components/ItemsGrid";
 import MultiDisplayItems from "../components/MultiDisplayItems";
 import Search from "../components/Search";
@@ -17,7 +16,7 @@ import {
   login,
   getTopArtists,
   getTopTracks,
-  searchTracksAndAlbums,
+  searchTracksAlbumPlaylistArtists,
   skipToNext,
   skipToPrevious,
   getArtist,
@@ -41,7 +40,7 @@ function App() {
     artistTopTracks: [],
   });
   const [offset, setOffset] = useState(0);
-  const [search, setSearch] = useState(false);
+  const [search, setSearch] = useState("");
   const [displaySearch, setDisplaySearch] = useState(false);
   const [displaySettings, setDisplaySettings] = useState(false);
   // search, top-tracks, playlists, album, artist, artist-albums
@@ -62,6 +61,12 @@ function App() {
     if (topArtists && topTracks && playlists)
       setSpotifyData({ ...spotifyData, topArtists, topTracks, playlists });
   };
+
+  const handleSearch = async () => {
+    const searchResults = await searchTracksAlbumPlaylistArtists(search);
+    if (searchResults) setSpotifyData({ ...spotifyData, searchResults });
+    setDisplaySearch(false);
+  }
 
   const handleNext = () => {
     setOffset(offset + 1);
@@ -154,24 +159,16 @@ function App() {
         onSearchClick={() => setDisplaySearch(true)}
         onSettingsClick={() => setDisplaySettings(true)}
       />
-      {displayType === "top-tracks" && (
+      {(displayType === "top-tracks" || displayType === "playlists")  && (
         <ItemsGrid
-          data={spotifyData.topTracks}
+          data={displayType === "top-tracks" ? spotifyData.topTracks : spotifyData.playlists}
           offset={offset}
           onItemGridClick={handleItemClick}
           onNext={handleNext}
           onPrevious={handlePrevious}
         />
       )}
-      {displayType === "playlists" && (
-        <ItemsGrid
-          data={spotifyData.playlists}
-          offset={offset}
-          onItemGridClick={handleItemClick}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-        />
-      )}
+
       {displayType === "artist" && (
         <MultiDisplayItems
           list={spotifyData.artistTopTracks}
@@ -202,7 +199,7 @@ function App() {
       <Search
         display={displaySearch}
         onChange={setSearch}
-        onEnter={() => {}}
+        onEnter={handleSearch}
         onClose={() => {
           setDisplaySearch(false);
         }}

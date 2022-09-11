@@ -76,16 +76,7 @@ const getTopArtists = async () => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.items.map((item) => {
-    return {
-      name: item.name,
-      id: item.id,
-      image: item.images[imageQuality].url,
-      type: item.type,
-    };
-  });
-
-  return result;
+  return _parseArtists(result);
 };
 
 const getTopTracks = async () => {
@@ -102,22 +93,13 @@ const getTopTracks = async () => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.items.map((item) => {
-    return {
-      name: item.name,
-      artist: item.artists.map((artist) => artist.name).join(" - "),
-      id: item.id,
-      image: item.album.images[imageQuality].url,
-      type: item.type,
-    };
-  });
-  return result;
+  return _parseTracks(result.items);
 };
 
-const searchTracksAndAlbums = async (query) => {
+const searchTracksAlbumPlaylistArtists = async (query) => {
   const params = {
     q: encodeURI(query),
-    type: "track,album,artist",
+    type: "track,album,playlist,artist",
     limit: 10,
   };
 
@@ -125,18 +107,12 @@ const searchTracksAndAlbums = async (query) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  console.log(result);
-  result = result.tracks.items.map((item) => {
-    return {
-      name: item.name,
-      artist: item.artists.map((artist) => artist.name).join(" - "),
-      id: item.id,
-      image: item.album.images[imageQuality].url,
-      type: item.type,
-    };
-  });
+  const tracks = _parseTracks(result.tracks.items);
+  const albums = _parseAlbums(result.albums);
+  const playlists = _parsePlaylists(result.playlists);
+  const artists = _parseArtists(result.artists);
 
-  return result;
+  return tracks.concat(albums, playlists, artists);
 };
 
 const skipToNext = async () => {
@@ -184,16 +160,7 @@ const getArtistAlbums = async (id) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.items.map((item) => {
-    return {
-      name: item.name,
-      id: item.id,
-      artist: item.artists.map((artist) => artist.name).join(" - "),
-      image: item.images[imageQuality].url,
-      type: item.type,
-    };
-  });
-  return result;
+  return _parseAlbums(result);
 };
 
 const getArtidtTopTracks = async (id) => {
@@ -209,18 +176,7 @@ const getArtidtTopTracks = async (id) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.tracks.map((item) => {
-    return {
-      name: item.name,
-      artist: item.artists.map((artist) => artist.name).join(" - "),
-      id: item.id,
-      image: item.album.images[imageQuality].url,
-      duration: millisToTime(item.duration_ms),
-      type: item.type,
-    };
-  });
-  console.log(result);
-  return result;
+  return _parseTracks(result.tracks);
 };
 
 const getPlaylists = async () => {
@@ -235,21 +191,10 @@ const getPlaylists = async () => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.items.map((item) => {
-    return {
-      name: item.name,
-      id: item.id,
-      image: item.images[imageQuality]
-        ? item.images[imageQuality].url
-        : item.images[0].url,
-      type: item.type,
-    };
-  });
-  return result;
+  return _parsePlaylists(result);
 };
 
 const getPlaylist = async (id) => {
-
   let result = await get(
     "https://api.spotify.com/v1/playlists/" + id,
     null,
@@ -258,19 +203,7 @@ const getPlaylist = async (id) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.tracks.items.map((item) => {
-    const track = item.track;
-    if (!track?.name) return null;
-    return {
-      name: track.name,
-      artist: track.artists.map((artist) => artist.name).join(" - "),
-      id: track.id,
-      image: track.album.images[imageQuality] ? track.album.images[imageQuality].url : track.album.images[0].url,
-      duration: millisToTime(track.duration_ms),
-      type: track.type,
-    };
-  }).filter(item => item !== null);
-  return result;
+  return _parseTracks(result.tracks.items);
 };
 
 const getAlbum = async (id) => {
@@ -282,17 +215,9 @@ const getAlbum = async (id) => {
 
   const isTokenValid = _checkTokenValidity(result);
   if (!isTokenValid) return [];
-  result = result.tracks.items.map((item) => {
-    return {
-      name: item.name,
-      artist: item.artists.map((artist) => artist.name).join(" - "),
-      id: item.id,
-      duration: millisToTime(item.duration_ms),
-      type: item.type,
-    };
-  });
-  return result;
-}
+  console.log(result.tracks.items);
+  return _parseTracks(result.tracks.items);
+};
 
 const playTrack = async (id) => {
   const params = {
@@ -310,11 +235,68 @@ const playTrack = async (id) => {
   return result;
 };
 
+const _parseArtists = (result) => {
+  return result.items.map((item) => {
+    return {
+      name: item.name,
+      id: item.id,
+      image: item.images[imageQuality]?.url,
+      type: item.type,
+    };
+  });
+};
+
+const _parseArtistsNames = (result) => {
+  return result.artists.map((artist) => artist.name).join(" - ");
+};
+
+const _parseAlbums = (result) => {
+  return result.items.map((item) => {
+    return {
+      name: item.name,
+      id: item.id,
+      artist: _parseArtistsNames(item),
+      image: item.images[imageQuality].url,
+      type: item.type,
+    };
+  });
+};
+
+const _parseTracks = (result) => {
+  return result
+    .map((item) => {
+      if (item?.track) item = item.track;
+      if (!item?.name) return null;
+      return {
+        name: item.name,
+        artist: _parseArtistsNames(item),
+        id: item.id,
+        image: item.album?.images[imageQuality].url || "",
+        type: item.type,
+        duration: millisToTime(item.duration_ms),
+      };
+    })
+    .filter((item) => item !== null);
+};
+
+const _parsePlaylists = (result) => {
+  return result.items.map((item) => {
+    return {
+      name: item.name,
+      id: item.id,
+      image: item.images[imageQuality]
+        ? item.images[imageQuality].url
+        : item.images[0].url,
+      type: item.type,
+    };
+  });
+};
+
 export {
   login,
   getTopArtists,
   getTopTracks,
-  searchTracksAndAlbums,
+  searchTracksAlbumPlaylistArtists,
   skipToNext,
   skipToPrevious,
   getArtist,

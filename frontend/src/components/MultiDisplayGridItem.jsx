@@ -10,10 +10,6 @@ const MultiDisplayGridItem = ({
   return (
     <div
       className="relative text-center opacity-95 hover:opacity-100 hover:scale-110 transition ease-in-out delay-20 duration-200 hover:cursor-pointer"
-      style={{
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-      }}
       onClick={() => onItemGridClick({ id, name, image, type })}
     >
       <img src={image} className="aspect-square rounded-xl"></img>

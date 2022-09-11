@@ -185,8 +185,8 @@ function App() {
           onPrevious={handlePrevious}
         />
       )}
-      {displayType === "playlist" ||
-        (displayType === "album" && (
+      {(displayType === "playlist" ||
+        displayType === "album") && (
           <MultiDisplayItems
             list={displayType === "playlist" ? spotifyData.playlistTracks : spotifyData.albumTracks}
             data={displayType === "playlist" ? spotifyData.playlist : spotifyData.album}
@@ -196,7 +196,7 @@ function App() {
             onNext={handleNext}
             onPrevious={handlePrevious}
           />
-        ))}
+        )}
 
       <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} />
       <Search

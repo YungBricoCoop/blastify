@@ -273,6 +273,27 @@ const getPlaylist = async (id) => {
   return result;
 };
 
+const getAlbum = async (id) => {
+  let result = await get(
+    "https://api.spotify.com/v1/albums/" + id,
+    null,
+    headers
+  );
+
+  const isTokenValid = _checkTokenValidity(result);
+  if (!isTokenValid) return [];
+  result = result.tracks.items.map((item) => {
+    return {
+      name: item.name,
+      artist: item.artists.map((artist) => artist.name).join(" - "),
+      id: item.id,
+      duration: millisToTime(item.duration_ms),
+      type: item.type,
+    };
+  });
+  return result;
+}
+
 const playTrack = async (id) => {
   const params = {
     uris: ["spotify:track:" + id],
@@ -301,5 +322,6 @@ export {
   getArtidtTopTracks,
   getPlaylists,
   getPlaylist,
+  getAlbum,
   playTrack,
 };

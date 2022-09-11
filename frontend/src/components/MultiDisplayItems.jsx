@@ -10,17 +10,19 @@ const MultiDisplayItems = ({
   grid = [],
   offset = 0,
   onItemClick = () => {},
+  onItemClick2 = () => {},
   onClose = () => {},
   onNext = () => {},
   onPrevious = () => {},
 }) => {
+  const displayArrows = list.length > 0 && grid.length > 0;
   return (
     <div className="relative list-items text-left w-2/4  ml-auto mr-auto mt-48 rounded-xl p-12 border-4 border-white/10 text-white shadow-md backdrop-blur-md">
       <ArrowCarousel
         onNext={onNext}
         onPrevious={onPrevious}
-        displayNext={offset === 0}
-        displayPrevious={offset === 1}
+        displayNext={displayArrows && offset === 0}
+        displayPrevious={displayArrows && offset === 1}
       />
       <div className="absolute flex gap-x-2 left-2 top-2">
         <BsXCircle

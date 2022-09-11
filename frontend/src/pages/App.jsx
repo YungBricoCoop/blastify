@@ -12,7 +12,6 @@ import ItemsGrid from "../components/ItemsGrid";
 import MultiDisplayItems from "../components/MultiDisplayItems";
 import Search from "../components/Search";
 
-
 // functions
 import {
   login,
@@ -26,6 +25,7 @@ import {
   getArtidtTopTracks,
   getPlaylists,
   getPlaylist,
+  getAlbum,
   playTrack,
 } from "../wrk/spotify";
 import { getToken } from "../utils/storage";
@@ -94,6 +94,16 @@ function App() {
     });
   };
 
+  const handleDisplayAlbum = async (album) => {
+    const albumTracks = await getAlbum(album.id);
+    setDisplayType("album");
+    setSpotifyData({
+      ...spotifyData,
+      albumTracks,
+      album,
+    });
+  };
+
   const handleItemClick = async (item) => {
     addDisplayToHistory();
     if (item === "playlists" || item === "top-tracks") {
@@ -109,6 +119,9 @@ function App() {
     }
     if (item?.type === "playlist") {
       handleDisplayPlaylist(item);
+    }
+    if (item?.type === "album") {
+      handleDisplayAlbum(item);
     }
   };
 
@@ -172,17 +185,18 @@ function App() {
           onPrevious={handlePrevious}
         />
       )}
-      {displayType === "playlist" && (
-        <MultiDisplayItems
-          list={spotifyData.playlistTracks}
-          data={spotifyData.playlist}
-          offset={offset}
-          onItemClick={handleItemClick}
-          onClose={handleShowLastDisplay}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-        />
-      )}
+      {displayType === "playlist" ||
+        (displayType === "album" && (
+          <MultiDisplayItems
+            list={displayType === "playlist" ? spotifyData.playlistTracks : spotifyData.albumTracks}
+            data={displayType === "playlist" ? spotifyData.playlist : spotifyData.album}
+            offset={offset}
+            onItemClick={handleItemClick}
+            onClose={handleShowLastDisplay}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+          />
+        ))}
 
       <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} />
       <Search

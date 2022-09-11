@@ -9,7 +9,7 @@ import Toolbar from "../components/Toolbar";
 import Dock from "../components/Dock";
 import ArrowsCarousel from "../components/ArrowsCarousel";
 import ItemsGrid from "../components/ItemsGrid";
-import ListItems from "../components/ListItems";
+import MultiDisplayItems from "../components/MultiDisplayItems";
 import Search from "../components/Search";
 
 // functions
@@ -145,6 +145,8 @@ function App() {
           data={spotifyData.topTracks}
           offset={offset}
           onItemGridClick={handleItemClick}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
         />
       )}
       {displayType === "playlists" && (
@@ -152,10 +154,12 @@ function App() {
           data={spotifyData.playlists}
           offset={offset}
           onItemGridClick={handleItemClick}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
         />
       )}
       {displayType === "artist" && (
-        <ListItems
+        <MultiDisplayItems
           list={spotifyData.artistTopTracks}
           grid={spotifyData.artistAlbums}
           data={spotifyData.artist}
@@ -164,7 +168,7 @@ function App() {
         />
       )}
       {displayType === "playlist" && (
-        <ListItems
+        <MultiDisplayItems
           list={spotifyData.playlistTracks}
           data={spotifyData.playlist}
           onListItemClick={handleItemClick}
@@ -173,7 +177,6 @@ function App() {
       )}
 
       <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} />
-      <ArrowsCarousel onNext={handleNext} onPrevious={handlePrevious} />
       <Search
         display={displaySearch}
         onChange={setSearch}

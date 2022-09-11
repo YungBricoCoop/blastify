@@ -1,4 +1,4 @@
-const ListItem = ({
+const MultiDisplayItem = ({
   id,
   name,
   duration,
@@ -17,4 +17,4 @@ const ListItem = ({
   );
 };
 
-export default ListItem;
+export default MultiDisplayItem;

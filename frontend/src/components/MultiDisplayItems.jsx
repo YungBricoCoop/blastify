@@ -39,43 +39,47 @@ const MultiDisplayItems = ({
           <img src={data.image} className="w-60 rounded-xl aspect-square" />
           <h1 className="text-center font-medium">{data?.name}</h1>
         </div>
-        {display === "list" && (
-          <div className="flex-initial overflow-x-auto overflow-y-scroll relative sm:rounded-lg w-2/4 h-80">
-            <table className="table-auto w-full">
-              <thead className="border-b-2 border-white/10">
-                <tr className="">
-                  <th className="p-1">Title</th>
-                  <th className="p-1 pr-10 text-right">Duration</th>
-                </tr>
-              </thead>
-              <tbody>
-                {list?.map((item, index) => {
-                  return (
-                    <MultiDisplayItem
-                      key={index}
-                      {...item}
-                      onListItemClick={onItemClick}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
-        {display === "grid"
-           && (
-            <div className="grid grid-cols-3 gap-x-4 gap-y-4 overflow-x-auto overflow-y-scroll  w-2/4 h-80 p-8">
-            {grid?.map((item, index) => {
-              return (
-                <MultiDisplayGridItem
-                  key={index}
-                  {...item}
-                  onItemGridClick={onItemClick}
-                />
-              );
-            })}
-          </div>
-        )}
+
+        <div
+          className={`${
+            display === "list" ? "" : "hidden"
+          } flex-initial overflow-x-auto overflow-y-scroll relative sm:rounded-lg w-2/4 h-80`}
+        >
+          <table className="table-auto w-full">
+            <thead className="border-b-2 border-white/10">
+              <tr className="">
+                <th className="p-1">Title</th>
+                <th className="p-1 pr-10 text-right">Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list?.map((item, index) => {
+                return (
+                  <MultiDisplayItem
+                    key={index}
+                    {...item}
+                    onListItemClick={onItemClick}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <div
+          className={`${
+            display === "grid" ? "grid" : "hidden"
+          } grid-cols-3 gap-x-4 gap-y-4 overflow-x-auto overflow-y-scroll  w-2/4 h-80 p-8`}
+        >
+          {grid?.map((item, index) => {
+            return (
+              <MultiDisplayGridItem
+                key={index}
+                {...item}
+                onItemGridClick={onItemClick}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );

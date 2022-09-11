@@ -25,15 +25,14 @@ const ItemsGrid = ({
         className={`grid grid-cols-4 gap-x-48 gap-y-24 place-content-stretch w-3/5 mr-auto ml-auto mt-10`}
       >
         {data.map((item, index) => {
-          if (index >= minRange && index < maxRange) {
             return (
               <ItemGrid
                 key={index}
                 {...item}
+                hidden = {index < minRange || index >= maxRange}
                 onItemGridClick={onItemGridClick}
               />
             );
-          }
         })}
       </div>
     </div>

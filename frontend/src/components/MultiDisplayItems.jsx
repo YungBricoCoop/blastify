@@ -1,6 +1,6 @@
 // components
 import MultiDisplayItem from "./MultiDisplayItem";
-import ItemGrid from "./ItemGrid";
+import MultiDisplayGridItem from "./MultiDisplayGridItem";
 import { BsXCircle, BsCircle } from "react-icons/bs";
 import ArrowCarousel from "./ArrowsCarousel";
 const MultiDisplayItems = ({
@@ -9,7 +9,7 @@ const MultiDisplayItems = ({
   list = [],
   grid = [],
   offset = 0,
-  onListItemClick = () => {},
+  onItemClick = () => {},
   onClose = () => {},
   onNext = () => {},
   onPrevious = () => {},
@@ -39,11 +39,11 @@ const MultiDisplayItems = ({
         </div>
         {display === "list" && (
           <div className="flex-initial overflow-x-auto overflow-y-scroll relative sm:rounded-lg w-2/4 h-80">
-            <table className="table-auto">
+            <table className="table-auto w-full">
               <thead className="border-b-2 border-white/10">
                 <tr className="">
                   <th className="p-1">Title</th>
-                  <th className="p-1 pr-4">Duration</th>
+                  <th className="p-1 pr-10 text-right">Duration</th>
                 </tr>
               </thead>
               <tbody>
@@ -52,7 +52,7 @@ const MultiDisplayItems = ({
                     <MultiDisplayItem
                       key={index}
                       {...item}
-                      onListItemClick={onListItemClick}
+                      onListItemClick={onItemClick}
                     />
                   );
                 })}
@@ -60,15 +60,15 @@ const MultiDisplayItems = ({
             </table>
           </div>
         )}
-        {display ===
-          "grid grid-cols-4 gap-x-48 gap-y-24 place-content-stretch w-3/5 mr-auto ml-auto mt-10" && (
-          <div>
+        {display === "grid"
+           && (
+            <div className="grid grid-cols-3 gap-x-4 gap-y-4 overflow-x-auto overflow-y-scroll  w-2/4 h-80 p-8">
             {grid?.map((item, index) => {
               return (
-                <ItemGrid
+                <MultiDisplayGridItem
                   key={index}
                   {...item}
-                  onListItemClick={onListItemClick}
+                  onItemGridClick={onItemClick}
                 />
               );
             })}

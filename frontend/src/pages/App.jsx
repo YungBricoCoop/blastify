@@ -12,6 +12,7 @@ import ItemsGrid from "../components/ItemsGrid";
 import MultiDisplayItems from "../components/MultiDisplayItems";
 import Search from "../components/Search";
 
+
 // functions
 import {
   login,
@@ -74,6 +75,7 @@ function App() {
     const artistAlbums = await getArtistAlbums(artist.id);
     const artistTopTracks = await getArtidtTopTracks(artist.id);
     setDisplayType("artist");
+    setOffset(0);
     setSpotifyData({
       ...spotifyData,
       artist,
@@ -94,9 +96,8 @@ function App() {
 
   const handleItemClick = async (item) => {
     addDisplayToHistory();
-    if (item === "playlists" || item === "top-tracks" || item === "artist") {
+    if (item === "playlists" || item === "top-tracks") {
       setDisplayType(item);
-      setOffset(0);
       return;
     }
 
@@ -163,16 +164,23 @@ function App() {
           list={spotifyData.artistTopTracks}
           grid={spotifyData.artistAlbums}
           data={spotifyData.artist}
-          onListItemClick={handleItemClick}
+          display={offset === 0 ? "list" : "grid"}
+          offset={offset}
+          onItemClick={handleItemClick}
           onClose={handleShowLastDisplay}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
         />
       )}
       {displayType === "playlist" && (
         <MultiDisplayItems
           list={spotifyData.playlistTracks}
           data={spotifyData.playlist}
-          onListItemClick={handleItemClick}
+          offset={offset}
+          onItemClick={handleItemClick}
           onClose={handleShowLastDisplay}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
         />
       )}
 

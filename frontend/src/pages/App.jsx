@@ -66,6 +66,7 @@ function App() {
     const searchResults = await searchTracksAlbumPlaylistArtists(search);
     if (searchResults) setSpotifyData({ ...spotifyData, searchResults });
     setDisplaySearch(false);
+    setDisplayType("search");
   }
 
   const handleNext = () => {

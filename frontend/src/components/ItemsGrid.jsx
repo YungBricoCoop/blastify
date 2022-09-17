@@ -15,6 +15,7 @@ const ItemsGrid = ({
   const minRange = offset * maxItems;
   const maxRange = (offset + 1) * maxItems;
   const textColor = isDarkTheme ? "text-white" : "text-black";
+  const colorMix = isDarkTheme ? "hover:mix-blend-color-dodge" : "hover:mix-blend-darken";
   return (
     <div className="items-grid">
       <ArrowsCarousel
@@ -25,7 +26,7 @@ const ItemsGrid = ({
         color={isDarkTheme ? "white" : "black"}
       />
       <div
-        className={`grid grid-cols-4 gap-x-48 gap-y-24 place-content-stretch w-3/5 mr-auto ml-auto mt-10 ${textColor}`}
+        className={`grid grid-cols-4 gap-x-48 gap-y-24 place-content-stretch w-3/5 mr-auto ml-auto mt-10  ${textColor}`}
       >
         {data.map((item, index) => {
             return (
@@ -33,6 +34,7 @@ const ItemsGrid = ({
                 key={index}
                 {...item}
                 hidden = {index < minRange || index >= maxRange}
+                colorMix={colorMix}
                 onItemGridClick={onItemGridClick}
               />
             );

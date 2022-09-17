@@ -84,6 +84,14 @@ const Settings = ({
                     />
                   </div>
                 </div>
+                <div className="flex-1">
+                  <div>
+                    <h1 className="text-lg font-bold">Spotify</h1>
+                  </div>
+                  <div className="flex gap-2">
+                    <p className="text-sm">Display items duration</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -26,8 +26,10 @@ import {
   getPlaylist,
   getAlbum,
   playTrack,
+  logout
 } from "../wrk/spotify";
 import { getToken } from "../utils/storage";
+import Settings from "../components/Settings";
 
 function App() {
   // states
@@ -46,6 +48,7 @@ function App() {
   // search, top-tracks, playlists, album, artist, artist-albums
   const [displayType, setDisplayType] = useState("top-tracks");
   const [displayHistory, setDisplayHistory] = useState([]);
+  const [isDarkTheme, setIsDarkTheme] = useState(true);
 
   // handlers
   const onLoginClick = () => {
@@ -67,7 +70,7 @@ function App() {
     if (searchResults) setSpotifyData({ ...spotifyData, searchResults });
     setDisplaySearch(false);
     setDisplayType("search");
-  }
+  };
 
   const handleNext = () => {
     setOffset(offset + 1);
@@ -160,9 +163,13 @@ function App() {
         onSearchClick={() => setDisplaySearch(true)}
         onSettingsClick={() => setDisplaySettings(true)}
       />
-      {(displayType === "top-tracks" || displayType === "playlists")  && (
+      {(displayType === "top-tracks" || displayType === "playlists") && (
         <ItemsGrid
-          data={displayType === "top-tracks" ? spotifyData.topTracks : spotifyData.playlists}
+          data={
+            displayType === "top-tracks"
+              ? spotifyData.topTracks
+              : spotifyData.playlists
+          }
           offset={offset}
           onItemGridClick={handleItemClick}
           onNext={handleNext}
@@ -183,20 +190,28 @@ function App() {
           onPrevious={handlePrevious}
         />
       )}
-      {(displayType === "playlist" ||
-        displayType === "album") && (
-          <MultiDisplayItems
-            list={displayType === "playlist" ? spotifyData.playlistTracks : spotifyData.albumTracks}
-            data={displayType === "playlist" ? spotifyData.playlist : spotifyData.album}
-            offset={offset}
-            onItemClick={handleItemClick}
-            onClose={handleShowLastDisplay}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-          />
-        )}
+      {(displayType === "playlist" || displayType === "album") && (
+        <MultiDisplayItems
+          list={
+            displayType === "playlist"
+              ? spotifyData.playlistTracks
+              : spotifyData.albumTracks
+          }
+          data={
+            displayType === "playlist"
+              ? spotifyData.playlist
+              : spotifyData.album
+          }
+          offset={offset}
+          onItemClick={handleItemClick}
+          onClose={handleShowLastDisplay}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+        />
+      )}
 
       <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} />
+
       <Search
         display={displaySearch}
         onChange={setSearch}
@@ -204,6 +219,16 @@ function App() {
         onClose={() => {
           setDisplaySearch(false);
         }}
+      />
+
+      <Settings
+        display={displaySettings}
+        onClose={() => {
+          setDisplaySettings(false);
+        }}
+        onChangeTheme={setIsDarkTheme}
+        onLogout={logout}
+        isDarkTheme={isDarkTheme}
       />
     </div>
   );

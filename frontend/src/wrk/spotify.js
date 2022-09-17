@@ -235,6 +235,12 @@ const playTrack = async (id) => {
   return result;
 };
 
+const logout = () => {
+  removeToken();
+  removeTokenExp();
+  window.location.reload();
+}
+
 const _parseArtists = (result) => {
   return result.items.map((item) => {
     return {
@@ -306,4 +312,5 @@ export {
   getPlaylist,
   getAlbum,
   playTrack,
+  logout
 };

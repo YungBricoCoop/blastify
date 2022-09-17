@@ -21,7 +21,7 @@ const Settings = ({ display, onClose, isDarkTheme = true, onChangeTheme, onLogou
           <div className="flex gap-1 mb-2 p-2 border-b-2 border-white/50 bg-white/10">
             <BsXCircle
               size={"18px"}
-              className="cursor-pointer opacity-50 hover:opacity-100 hover:scale-125 transition ease-in-out duration-300"
+              className="cursor-pointer opacity-50 hover:opacity-100 hover:scale-110 transition ease-in-out duration-300"
               onClick={onClose}
             />
             <BsCircle size={"18px"} className="opacity-50" />

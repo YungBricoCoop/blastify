@@ -26,9 +26,8 @@ import {
   getPlaylist,
   getAlbum,
   playTrack,
-  logout
+  logout,
 } from "../wrk/spotify";
-import { getToken } from "../utils/storage";
 import Settings from "../components/Settings";
 
 function App() {
@@ -152,9 +151,14 @@ function App() {
     handleLogin();
   }, []);
 
+  useEffect(() => {
+      document.body.style.backgroundImage = `url('/background-${isDarkTheme ? "dark" : "white"}.png')`;
+  }, [isDarkTheme])
+
   return (
     <div className="App">
       <Toolbar
+        isDarkTheme={isDarkTheme}
         onLoginClick={onLoginClick}
         onHomeClick={() => handleItemClick("top-tracks")}
         onLibraryClick={() => handleItemClick("playlists")}
@@ -171,6 +175,7 @@ function App() {
               : spotifyData.playlists
           }
           offset={offset}
+          isDarkTheme={isDarkTheme}
           onItemGridClick={handleItemClick}
           onNext={handleNext}
           onPrevious={handlePrevious}
@@ -184,6 +189,7 @@ function App() {
           data={spotifyData.artist}
           display={offset === 0 ? "list" : "grid"}
           offset={offset}
+          isDarkTheme={isDarkTheme}
           onItemClick={handleItemClick}
           onClose={handleShowLastDisplay}
           onNext={handleNext}
@@ -203,6 +209,7 @@ function App() {
               : spotifyData.album
           }
           offset={offset}
+          isDarkTheme={isDarkTheme}
           onItemClick={handleItemClick}
           onClose={handleShowLastDisplay}
           onNext={handleNext}
@@ -210,10 +217,11 @@ function App() {
         />
       )}
 
-      <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} />
+      <Dock data={spotifyData.topArtists} onDockItemClick={handleItemClick} isDarkTheme={isDarkTheme}/>
 
       <Search
         display={displaySearch}
+        isDarkTheme={isDarkTheme}
         onChange={setSearch}
         onEnter={handleSearch}
         onClose={() => {
@@ -223,12 +231,12 @@ function App() {
 
       <Settings
         display={displaySettings}
+        isDarkTheme={isDarkTheme}
         onClose={() => {
           setDisplaySettings(false);
         }}
         onChangeTheme={setIsDarkTheme}
         onLogout={logout}
-        isDarkTheme={isDarkTheme}
       />
     </div>
   );

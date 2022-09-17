@@ -5,7 +5,7 @@ const ItemGrid = ({ id, image, name, type, hidden, onItemGridClick = () => {} })
       onClick={() => onItemGridClick({ id, name, image, type })}
     >
       <img src={image} className="aspect-square rounded-2xl"></img>
-      <h1 className="absolute text-white -bottom-8 w-full break-words pl-2 pr-2">{name}</h1>
+      <h1 className="absolute -bottom-8 w-full break-words pl-2 pr-2">{name}</h1>
     </div>
   );
 };

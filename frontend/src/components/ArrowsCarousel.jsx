@@ -5,6 +5,7 @@ const ArrowsCarousel = ({
   onNext,
   displayPrevious = true,
   displayNext = true,
+  color
 }) => {
   return (
     <div className="arrows-carousel h-full">
@@ -12,7 +13,7 @@ const ArrowsCarousel = ({
         {displayPrevious && (
           <IoIosArrowBack
             size={"2vw"}
-            color="white"
+            color={color}
             className="hover:-translate-x-1 transition duration-500 hover:cursor-pointer"
             onClick={onPrevious}
           />
@@ -22,7 +23,7 @@ const ArrowsCarousel = ({
         {displayNext && (
           <IoIosArrowForward
             size={"2vw"}
-            color="white"
+            color={color}
             className="hover:translate-x-1 transition duration-500 hover:cursor-pointer"
             onClick={onNext}
           />

@@ -1,16 +1,28 @@
 // components
 import { BsCircle, BsXCircle } from "react-icons/bs";
 
-const Search = ({ display, value, onChange, onEnter, onClose }) => {
+const Search = ({
+  display,
+  value,
+  onChange,
+  onEnter,
+  onClose,
+  isDarkTheme,
+}) => {
+
+  const bgColor = isDarkTheme ? "bg-black/20" : "bg-white/20";
+  const boColor = isDarkTheme ? "border-white/20" : "border-white/20";
+  const textColor = isDarkTheme ? "text-white" : "text-black";
+
   return (
     <div
-      className={`search-modal absolute w-full h-full left-0 top-0  p-2 rounded-xl bg-black/5 backdrop-blur-md ${
+      className={`search-modal absolute w-full h-full left-0 top-0  p-2 rounded-xl backdrop-blur-md ${
         display ? "" : "hidden"
       } z-10`}
     >
-      <div className="search-input-container w-96 mr-auto ml-auto mt-32 text-white">
-        <div className="shadow relative rounded-xl bg-white/5  border-2 border-white/50">
-          <div className="flex gap-1 mb-2 p-2 border-b-2 border-white/50 bg-white/10">
+      <div className={`search-input-container w-96 mr-auto ml-auto mt-32 ${textColor}`}>
+        <div className={`shadow relative rounded-xl ${bgColor} border-2 ${boColor}`}>
+          <div className={`flex gap-1 mb-2 p-2 rounded-t-lg ${bgColor} border-b-2 ${boColor}`}>
             <BsXCircle
               size={"18px"}
               className="cursor-pointer opacity-50 hover:opacity-100 hover:scale-110 transition ease-in-out duration-300"

@@ -9,20 +9,27 @@ const MultiDisplayItems = ({
   list = [],
   grid = [],
   offset = 0,
+  isDarkTheme,
   onItemClick = () => {},
-  onItemClick2 = () => {},
   onClose = () => {},
   onNext = () => {},
   onPrevious = () => {},
 }) => {
+
   const displayArrows = list.length > 0 && grid.length > 0;
+
+  const bgColor = isDarkTheme ? "bg-black/10" : "bg-white/20";
+  const boColor = isDarkTheme ? "border-white/10" : "border-white/20";
+  const textColor = isDarkTheme ? "text-white" : "text-black";
+
   return (
-    <div className="relative list-items text-left w-2/4  ml-auto mr-auto mt-48 rounded-xl p-12 border-4 border-white/10 text-white shadow-md backdrop-blur-md">
+    <div className={`relative list-items text-left w-2/4  ml-auto mr-auto mt-48 rounded-xl p-12 border-2 ${bgColor} ${boColor} ${textColor} shadow-md backdrop-blur-md`}>
       <ArrowCarousel
         onNext={onNext}
         onPrevious={onPrevious}
         displayNext={displayArrows && offset === 0}
         displayPrevious={displayArrows && offset === 1}
+        color={isDarkTheme ? "white" : "black"}
       />
       <div className="absolute flex gap-x-2 left-2 top-2">
         <BsXCircle

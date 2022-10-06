@@ -1,4 +1,4 @@
-# Blastify
+# 🎵 Blastify 🎵
 ```Blastify is a Mac OS like UI used to display your Spotify data (Built-In Light☀️/Dark🌙 theme)```
 
 The dock contains your top 10 artists and the desktop your top 50 tracks.

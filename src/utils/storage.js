@@ -22,6 +22,24 @@ const removeTokenExp = () => {
   localStorage.removeItem("blastify-spotify-token-exp");
 };
 
+const saveColorTheme = (theme) => {
+  localStorage.setItem("blastify-color-theme", theme);
+}
+
+const getColorTheme = () => {
+  return localStorage.getItem("blastify-color-theme") || "light";
+}
+
+const saveDisplayTimeRange = (timeRange) => {
+  localStorage.setItem("blastify-display-time-range", timeRange);
+}
+
+const getDisplayTimeRange = () => {
+  return localStorage.getItem("blastify-display-time-range") || "medium_term";
+}
+
+
+
 export {
   saveToken,
   getToken,
@@ -29,4 +47,8 @@ export {
   saveTokenExp,
   getTokenExp,
   removeTokenExp,
+  saveColorTheme,
+  getColorTheme,
+  saveDisplayTimeRange,
+  getDisplayTimeRange
 };

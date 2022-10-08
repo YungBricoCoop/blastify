@@ -62,9 +62,9 @@ const _checkTokenValidity = (response) => {
   return true;
 };
 
-const getTopArtists = async () => {
+const getTopArtists = async (timeRange) => {
   const params = {
-    time_range: "medium_term",
+    time_range: timeRange,
     limit: 10,
   };
 
@@ -79,9 +79,9 @@ const getTopArtists = async () => {
   return _parseArtists(result);
 };
 
-const getTopTracks = async () => {
+const getTopTracks = async (timeRange) => {
   const params = {
-    time_range: "medium_term",
+    time_range: timeRange,
     limit: 50,
   };
 

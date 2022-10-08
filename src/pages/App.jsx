@@ -28,7 +28,10 @@ import {
   playTrack,
   logout,
 } from "../wrk/spotify";
+
 import Settings from "../components/Settings";
+
+import { getColorTheme, saveColorTheme, getDisplayTimeRange, saveDisplayTimeRange } from "../utils/storage";
 
 function App() {
   // states
@@ -47,7 +50,13 @@ function App() {
   // search, top-tracks, playlists, album, artist, artist-albums
   const [displayType, setDisplayType] = useState("top-tracks");
   const [displayHistory, setDisplayHistory] = useState([]);
-  const [isDarkTheme, setIsDarkTheme] = useState(true);
+  const [settings, setSettings] = useState({
+    theme: getColorTheme(),
+    timeRange: getDisplayTimeRange(),
+  });
+
+  const isDarkTheme = settings.theme === "dark" ? true : false;
+  const timeRange = settings.timeRange;
 
   // handlers
   const onLoginClick = () => {
@@ -57,12 +66,28 @@ function App() {
   const handleLogin = async () => {
     const loginCompleted = await login();
     if (!loginCompleted) return;
-    const topArtists = await getTopArtists();
-    const topTracks = await getTopTracks();
+    const topArtists = await getTopArtists(timeRange);
+    const topTracks = await getTopTracks(timeRange);
     const playlists = await getPlaylists();
     if (topArtists && topTracks && playlists)
       setSpotifyData({ ...spotifyData, topArtists, topTracks, playlists });
   };
+
+
+  const handleChangeTheme = (isDark) => {
+    const theme = isDark ? "dark" : "white";
+    setSettings({ ...settings, theme });
+    saveColorTheme(theme);
+  }
+
+  const handleChangeTimeRange = async (timeRange) => {
+    setSettings({ ...settings, timeRange });
+    saveDisplayTimeRange(timeRange);
+    const topArtists = await getTopArtists(timeRange);
+    const topTracks = await getTopTracks(timeRange);
+    if (topArtists && topTracks)
+      setSpotifyData({ ...spotifyData, topArtists, topTracks });
+  }
 
   const handleSearch = async () => {
     const searchResults = await searchTracksAlbumPlaylistArtists(search);
@@ -146,6 +171,7 @@ function App() {
   const addDisplayToHistory = () => {
     setDisplayHistory([...displayHistory, { displayType, offset }]);
   };
+
   // use effects
   useEffect(() => {
     handleLogin();
@@ -153,7 +179,7 @@ function App() {
 
   useEffect(() => {
       document.body.style.backgroundImage = `url('/background-${isDarkTheme ? "dark" : "white"}.png')`;
-  }, [isDarkTheme])
+  }, [settings.theme]);
 
   return (
     <div className="App">
@@ -232,10 +258,12 @@ function App() {
       <Settings
         display={displaySettings}
         isDarkTheme={isDarkTheme}
+        timeRange={timeRange}
         onClose={() => {
           setDisplaySettings(false);
         }}
-        onChangeTheme={setIsDarkTheme}
+        onChangeTheme={handleChangeTheme}
+        onChangeTimeRange={handleChangeTimeRange}
         onLogout={logout}
       />
     </div>

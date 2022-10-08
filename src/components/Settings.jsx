@@ -7,13 +7,18 @@ import {
   BsSunFill,
   BsSun,
   BsFillPersonXFill,
+  BsBattery,
+  BsBatteryHalf,
+  BsBatteryFull,
 } from "react-icons/bs";
 
 const Settings = ({
   display,
   onClose,
-  isDarkTheme = true,
+  isDarkTheme,
+  timeRange,
   onChangeTheme,
+  onChangeTimeRange,
   onLogout,
 }) => {
 
@@ -89,7 +94,22 @@ const Settings = ({
                     <h1 className="text-lg font-bold">Spotify</h1>
                   </div>
                   <div className="flex gap-2">
-                    <p className="text-sm">Display items duration</p>
+                    <p className="text-sm">Top (artists/tracks) time range</p>
+                    <BsBattery
+                      size={"18px"}
+                      className={`${timeRange === "short_term" ? "" : "hidden"} opacity-50  hover:scale-125 hover:cursor-pointer hover:opacity-80 transition-all`}
+                      onClick={() => onChangeTimeRange("medium_term")}
+                    />
+                    <BsBatteryHalf
+                      size={"18px"}
+                      className={`${timeRange === "medium_term" ? "" : "hidden"} opacity-50  hover:scale-125 hover:cursor-pointer hover:opacity-80 transition-all`}
+                      onClick={() => onChangeTimeRange("long_term")}
+                    />
+                    <BsBatteryFull
+                      size={"18px"}
+                      className={`${timeRange === "long_term" ? "" : "hidden"} opacity-50  hover:scale-125 hover:cursor-pointer hover:opacity-80 transition-all`}
+                      onClick={() => onChangeTimeRange("short_term")}
+                    />
                   </div>
                 </div>
               </div>

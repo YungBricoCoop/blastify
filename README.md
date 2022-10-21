@@ -46,7 +46,7 @@ export default constants;
 npm start
 ```
 
-## Screensots
+## Screenshots
 
 ### --- Artist top tracks ---
 ![ui_artist](https://user-images.githubusercontent.com/42273436/194402954-5f5a9690-2317-412d-99c6-c45dc4395bf4.png)

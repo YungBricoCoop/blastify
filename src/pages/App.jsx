@@ -178,7 +178,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-      document.body.style.backgroundImage = `url('/background-${isDarkTheme ? "dark" : "white"}.png')`;
+      document.body.style.backgroundImage = `url('./background-${isDarkTheme ? "dark" : "white"}.png')`;
   }, [settings.theme]);
 
   return (
